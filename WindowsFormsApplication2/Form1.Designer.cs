@@ -45,12 +45,13 @@
             this.labelCountDownWork.Size = new System.Drawing.Size(484, 461);
             this.labelCountDownWork.TabIndex = 0;
             this.labelCountDownWork.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelCountDownWork.Click += new System.EventHandler(this.labelCountDownWork_Click);
             // 
             // btnTimerWorkCycle
             // 
             this.btnTimerWorkCycle.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnTimerWorkCycle.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTimerWorkCycle.Location = new System.Drawing.Point(188, 116);
+            this.btnTimerWorkCycle.Location = new System.Drawing.Point(194, 124);
             this.btnTimerWorkCycle.Name = "btnTimerWorkCycle";
             this.btnTimerWorkCycle.Size = new System.Drawing.Size(100, 25);
             this.btnTimerWorkCycle.TabIndex = 1;
@@ -72,6 +73,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(484, 461);
             this.Controls.Add(this.btnTimerWorkCycle);
             this.Controls.Add(this.labelCountDownWork);

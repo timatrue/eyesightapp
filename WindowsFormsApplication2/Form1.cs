@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Reflection;
+using System.IO;
 
 namespace WindowsFormsApplication2
 {
@@ -24,7 +26,7 @@ namespace WindowsFormsApplication2
             public static int initCountDown;
 
             public const string titleBarText = "EyeSight";
-            public const string pauseText= "Pause";
+            public const string pauseText= "Running...";
             public const string startText = "Start";
             public const string timeLeftText = " minutes left";
             public const string pauseFinishedText = "Pause is finished";
@@ -38,8 +40,9 @@ namespace WindowsFormsApplication2
             
             timerDisplayCountDown.Interval = Globals.minuteTime;
             //labelCurrentDate.Text = DateTime.Now.ToString(("hh:mm:ss tt"));
-
             this.Text = Globals.titleBarText;
+            
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -64,6 +67,7 @@ namespace WindowsFormsApplication2
             else
             {
                 labelCountDownWork.Text = Globals.pauseFinishedText.ToString();
+                btnTimerWorkCycle.Text = Globals.startText;
             }
             if (Globals.pauseCycleRunning == false) { 
                 DialogResult msgPause = MessageBox.Show(
@@ -109,14 +113,24 @@ namespace WindowsFormsApplication2
         private void setTimeInterval(bool pause) {
             if (pause == false)
             {
-                Globals.setTimeMinutes = 3;
+                Globals.setTimeMinutes = 25;
             }
             else
             {
-                Globals.setTimeMinutes = 2;
+                Globals.setTimeMinutes = 3;
             }
             int time = Globals.setTimeMinutes;
             Globals.initCountDown = time;
+        }
+
+        private void labelCountDownWork_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void imgBoxBg_Click(object sender, EventArgs e)
+        {
+
         }
     }
 
