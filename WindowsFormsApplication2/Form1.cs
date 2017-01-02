@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Reflection;
-using System.IO;
+
+
+
 
 namespace WindowsFormsApplication2
 {
@@ -37,48 +31,31 @@ namespace WindowsFormsApplication2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
             timerDisplayCountDown.Interval = Globals.minuteTime;
             //labelCurrentDate.Text = DateTime.Now.ToString(("hh:mm:ss tt"));
             this.Text = Globals.titleBarText;
             
-
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            startTimerWorkCycle();
+            startTimerCycle(false);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             timerDisplayCountDown.Stop();
             timerWindowApp.Stop();
-            this.CenterToScreen();
-            if (this.WindowState == FormWindowState.Minimized) { 
-                this.WindowState = FormWindowState.Normal;
-            }
-            this.TopMost = true;
+            fullScreenMode();
+            btnTimerWorkCycle.Text = Globals.startText;
             if (Globals.pauseCycleRunning == false)
             {
                 labelCountDownWork.Text = Globals.setTimeMinutes.ToString();
-                btnTimerWorkCycle.Text = Globals.startText;
+                messageBoxPause();
             }
-            else
-            {
+            else {
                 labelCountDownWork.Text = Globals.pauseFinishedText.ToString();
-                btnTimerWorkCycle.Text = Globals.startText;
-            }
-            if (Globals.pauseCycleRunning == false) { 
-                DialogResult msgPause = MessageBox.Show(
-                    Globals.messagePauseTitle, Globals.messagePauseText, MessageBoxButtons.YesNo);
-                if (msgPause == DialogResult.Yes)
-                {
-                    startTimerPauseCycle();
-                }
-                else if ( msgPause == DialogResult.No ) {
-                    startTimerWorkCycle();
-                }
             }
         }
 
@@ -87,28 +64,16 @@ namespace WindowsFormsApplication2
             Globals.initCountDown -=  1;
             labelCountDownWork.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
         }
-        private void startTimerWorkCycle() {
-            Globals.pauseCycleRunning = false;
-            setTimeInterval(false);
-            timerWindowApp.Interval = Globals.setTimeMinutes * Globals.minuteTime;
-            btnTimerWorkCycle.Text = Globals.pauseText;
-            labelCountDownWork.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
-            this.TopMost = false;
-            timerDisplayCountDown.Start();
-            timerWindowApp.Start();
-
-        }
-        private void startTimerPauseCycle()
+        private void startTimerCycle(bool pause)
         {
-            Globals.pauseCycleRunning = true;
-            setTimeInterval(true);
+            Globals.pauseCycleRunning = pause;
+            setTimeInterval(pause);
             timerWindowApp.Interval = Globals.setTimeMinutes * Globals.minuteTime;
             btnTimerWorkCycle.Text = Globals.pauseText;
             labelCountDownWork.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
             this.TopMost = false;
             timerDisplayCountDown.Start();
             timerWindowApp.Start();
-
         }
         private void setTimeInterval(bool pause) {
             if (pause == false)
@@ -117,18 +82,38 @@ namespace WindowsFormsApplication2
             }
             else
             {
-                Globals.setTimeMinutes = 3;
+                Globals.setTimeMinutes = 7;
             }
             int time = Globals.setTimeMinutes;
             Globals.initCountDown = time;
         }
-
-        private void labelCountDownWork_Click(object sender, EventArgs e)
+        private void fullScreenMode()
         {
-
+            this.TopMost = true;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+            System.Media.SystemSounds.Asterisk.Play();
         }
-
-        private void imgBoxBg_Click(object sender, EventArgs e)
+        private void minimizedMode()
+        {
+            this.CenterToScreen();
+            if (this.WindowState == FormWindowState.Minimized)
+                this.WindowState = FormWindowState.Normal;
+        }
+        private void messageBoxPause()
+        {
+            DialogResult msgPause = MessageBox.Show(
+                    Globals.messagePauseTitle, Globals.messagePauseText, MessageBoxButtons.YesNo);
+            if (msgPause == DialogResult.Yes)
+            {
+                startTimerCycle(true);
+            }
+            else if (msgPause == DialogResult.No)
+            {
+                startTimerCycle(false);
+            }
+        }
+        private void labelCountDownWork_Click(object sender, EventArgs e)
         {
 
         }
