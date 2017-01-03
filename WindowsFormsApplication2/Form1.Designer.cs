@@ -33,6 +33,9 @@
             this.btnTimerWorkCycle = new System.Windows.Forms.Button();
             this.timerWindowApp = new System.Windows.Forms.Timer(this.components);
             this.timerDisplayCountDown = new System.Windows.Forms.Timer(this.components);
+            this.panelTest = new System.Windows.Forms.Panel();
+            this.buttonTest = new System.Windows.Forms.Button();
+            this.panelTest.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelCountDownWork
@@ -69,12 +72,33 @@
             this.timerDisplayCountDown.Interval = 1000;
             this.timerDisplayCountDown.Tick += new System.EventHandler(this.timer1_Tick_1);
             // 
+            // panelTest
+            // 
+            this.panelTest.BackColor = System.Drawing.SystemColors.Control;
+            this.panelTest.Controls.Add(this.buttonTest);
+            this.panelTest.Location = new System.Drawing.Point(4, 0);
+            this.panelTest.Name = "panelTest";
+            this.panelTest.Size = new System.Drawing.Size(78, 70);
+            this.panelTest.TabIndex = 3;
+            this.panelTest.Paint += new System.Windows.Forms.PaintEventHandler(this.panelTest_Paint);
+            // 
+            // buttonTest
+            // 
+            this.buttonTest.Location = new System.Drawing.Point(0, 2);
+            this.buttonTest.Name = "buttonTest";
+            this.buttonTest.Size = new System.Drawing.Size(75, 23);
+            this.buttonTest.TabIndex = 0;
+            this.buttonTest.Text = "button1";
+            this.buttonTest.UseVisualStyleBackColor = true;
+            this.buttonTest.Click += new System.EventHandler(this.button1_Click_2);
+            // 
             // FormWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(484, 461);
+            this.Controls.Add(this.panelTest);
             this.Controls.Add(this.btnTimerWorkCycle);
             this.Controls.Add(this.labelCountDownWork);
             this.Name = "FormWindow";
@@ -82,6 +106,7 @@
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.panelTest.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -92,6 +117,8 @@
         private System.Windows.Forms.Button btnTimerWorkCycle;
         private System.Windows.Forms.Timer timerWindowApp;
         private System.Windows.Forms.Timer timerDisplayCountDown;
+        private System.Windows.Forms.Panel panelTest;
+        private System.Windows.Forms.Button buttonTest;
     }
 }
 
