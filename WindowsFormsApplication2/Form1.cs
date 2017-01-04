@@ -9,40 +9,37 @@ namespace WindowsFormsApplication2
     {
         public FormWindow()
         {
-            GlobalMouseHandler gmh = new GlobalMouseHandler();
-            //TheMouseMoved new Delegate
-            gmh.TheMouseMoved += new MouseMovedEvent(gmh_TheMouseMoved);
-            Application.AddMessageFilter(gmh);
             InitializeComponent();
-            buttonTest.Visible = false;
-            panelTest.MouseMove += new MouseEventHandler(panelTest_MouseMove);
-            panelTest.MouseLeave += new EventHandler(panelTest_MouseLeave);
+   
         }
-
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            timerDisplayCountDown.Interval = Globals.minuteTime;
+            currentDateLabel.Text = Globals.dateText + DateTime.Now.ToLongDateString();
+            this.Text = Globals.titleBarText;
+            btnScreenMode.Visible = false;
+            panelScreenMode.Visible = false;
+            currentDateLabel.Left = (this.ClientSize.Width - currentDateLabel.Size.Width) / 2;
+            //Handlers
+            panelScreenMode.MouseMove += new MouseEventHandler(panelTest_MouseMove);
+            btnScreenMode.MouseLeave += new EventHandler(panelTest_MouseLeave);
+            this.Resize += new EventHandler(labels_Resize);
+        }
         private void panelTest_MouseMove(object sender, MouseEventArgs e)
         {
-            if (panelTest.Bounds.Contains(e.Location) && !buttonTest.Visible)
+            if (btnScreenMode.Bounds.Contains(e.Location) && !btnScreenMode.Visible)
             {
-                buttonTest.Visible = true;
+                btnScreenMode.Visible = true;
             }
           
         }
         private void panelTest_MouseLeave(object sender, EventArgs e)
         {
-                buttonTest.Visible = false;
+            btnScreenMode.Hide();
         }
-        void gmh_TheMouseMoved()
+        private void panelTest_MouseEnter(object sender, EventArgs e)
         {
-            Point cur_pos = Cursor.Position;
-            Console.WriteLine(cur_pos);
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            timerDisplayCountDown.Interval = Globals.minuteTime;
-            //labelCurrentDate.Text = DateTime.Now.ToString(("hh:mm:ss tt"));
-            this.Text = Globals.titleBarText;
-
+            btnScreenMode.Show();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -85,7 +82,7 @@ namespace WindowsFormsApplication2
         private void setTimeInterval(bool pause) {
             if (pause == false)
             {
-                Globals.setTimeMinutes = 25;
+                Globals.setTimeMinutes = 27;
             }
             else
             {
@@ -96,10 +93,18 @@ namespace WindowsFormsApplication2
         }
         private void fullScreenMode()
         {
+            panelScreenMode.Visible = true;
             this.TopMost = true;
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
             System.Media.SystemSounds.Asterisk.Play();
+        }
+        private void leavefullScreenMode()
+        {
+            panelScreenMode.Visible = false;
+            this.TopMost = false;
+            this.FormBorderStyle = FormBorderStyle.Sizable;
+            this.WindowState = FormWindowState.Normal;
         }
         private void minimizedMode()
         {
@@ -107,6 +112,11 @@ namespace WindowsFormsApplication2
             if (this.WindowState == FormWindowState.Minimized)
                 this.WindowState = FormWindowState.Normal;
         }
+        private void labels_Resize(object sender, EventArgs e)
+        {
+            currentDateLabel.Left = (this.ClientSize.Width - currentDateLabel.Size.Width) / 2;
+        }
+       
         private void messageBoxPause()
         {
             DialogResult msgPause = MessageBox.Show(
@@ -124,60 +134,21 @@ namespace WindowsFormsApplication2
         {
 
         }
-
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
         private void panelTest_Paint(object sender, PaintEventArgs e)
         {
 
         }
 
-        private void button1_Click_2(object sender, EventArgs e)
+        private void buttonTest_Click(object sender, EventArgs e)
         {
-
-        }
-    }
-    public delegate void MouseMovedEvent();
-    
-
-    public class GlobalMouseHandler : IMessageFilter
-    {
-        private const int WM_MOUSEMOVE = 0x0200;
-        public event MouseMovedEvent TheMouseMoved;
-
-        #region IMessageFilter Members
-
-        public bool PreFilterMessage(ref Message m)
-        {
-            int x = (m.LParam.ToInt32() << 16) >> 16;
-            int y = (m.LParam.ToInt32() >> 16);
-            Point p = new Point(x,y);
-
-            //if (Globals.rec1.Contains(p)) testEvent();
-            if (m.Msg == WM_MOUSEMOVE)
-            {
-                if (TheMouseMoved != null)
-                {
-                    TheMouseMoved();
-                }
-            }
-            // Always allow message to continue to the next filter control
-            return false;
+            leavefullScreenMode();
         }
 
-        #endregion
-    }
-    
     class Globals
     {
         public static int setTimeMinutes;
         public const int minuteTime = 1000 * 60;
         public static int initCountDown;
-
         public const string titleBarText = "EyeSight";
         public const string pauseText = "Running...";
         public const string startText = "Start";
@@ -185,9 +156,10 @@ namespace WindowsFormsApplication2
         public const string pauseFinishedText = "Pause is finished";
         public const string messagePauseText = "Pause?";
         public const string messagePauseTitle = "Pause?";
-        public static bool pauseCycleRunning = false;
-        public static Rectangle rec1;
-       
+        public const string screenMode = "";
+        public const string dateText = "Today is ";
+        public static bool pauseCycleRunning = false; 
     }
 
+}
 }
