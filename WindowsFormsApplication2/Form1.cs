@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.ComponentModel;
+using System.Linq;
 
 namespace WindowsFormsApplication2
 {
@@ -10,7 +12,7 @@ namespace WindowsFormsApplication2
         public FormWindow()
         {
             InitializeComponent();
-   
+
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -19,11 +21,11 @@ namespace WindowsFormsApplication2
             this.Text = Globals.titleBarText;
             btnScreenMode.Visible = false;
             panelScreenMode.Visible = false;
-            currentDateLabel.Left = (this.ClientSize.Width - currentDateLabel.Size.Width) / 2;
+            flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
             //Handlers
             panelScreenMode.MouseMove += new MouseEventHandler(panelTest_MouseMove);
             btnScreenMode.MouseLeave += new EventHandler(panelTest_MouseLeave);
-            this.Resize += new EventHandler(labels_Resize);
+            this.Resize += new EventHandler(flowLayoutPanelMain_Resize);
         }
         private void panelTest_MouseMove(object sender, MouseEventArgs e)
         {
@@ -31,7 +33,7 @@ namespace WindowsFormsApplication2
             {
                 btnScreenMode.Visible = true;
             }
-          
+
         }
         private void panelTest_MouseLeave(object sender, EventArgs e)
         {
@@ -55,18 +57,19 @@ namespace WindowsFormsApplication2
             btnTimerWorkCycle.Text = Globals.startText;
             if (Globals.pauseCycleRunning == false)
             {
-                labelCountDownWork.Text = Globals.setTimeMinutes.ToString();
+                countDownWorkLabel.Text = Globals.setTimeMinutes.ToString();
                 messageBoxPause();
             }
-            else {
-                labelCountDownWork.Text = Globals.pauseFinishedText.ToString();
+            else
+            {
+                countDownWorkLabel.Text = Globals.pauseFinishedText.ToString();
             }
         }
 
         private void timer1_Tick_1(object sender, EventArgs e)
         {
-            Globals.initCountDown -=  1;
-            labelCountDownWork.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
+            Globals.initCountDown -= 1;
+            countDownWorkLabel.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
         }
         private void startTimerCycle(bool pause)
         {
@@ -74,19 +77,21 @@ namespace WindowsFormsApplication2
             setTimeInterval(pause);
             timerWindowApp.Interval = Globals.setTimeMinutes * Globals.minuteTime;
             btnTimerWorkCycle.Text = Globals.pauseText;
-            labelCountDownWork.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
+            countDownWorkLabel.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
             this.TopMost = false;
             timerDisplayCountDown.Start();
             timerWindowApp.Start();
         }
-        private void setTimeInterval(bool pause) {
+        private void setTimeInterval(bool pause)
+        {
             if (pause == false)
             {
-                Globals.setTimeMinutes = 27;
+                Globals.setTimeMinutes = UserInput.cycleWork;
+                
             }
             else
             {
-                Globals.setTimeMinutes = 7;
+                Globals.setTimeMinutes = UserInput.cyclePause;
             }
             int time = Globals.setTimeMinutes;
             Globals.initCountDown = time;
@@ -112,11 +117,11 @@ namespace WindowsFormsApplication2
             if (this.WindowState == FormWindowState.Minimized)
                 this.WindowState = FormWindowState.Normal;
         }
-        private void labels_Resize(object sender, EventArgs e)
+        private void flowLayoutPanelMain_Resize(object sender, EventArgs e)
         {
-            currentDateLabel.Left = (this.ClientSize.Width - currentDateLabel.Size.Width) / 2;
+            flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
         }
-       
+
         private void messageBoxPause()
         {
             DialogResult msgPause = MessageBox.Show(
@@ -144,22 +149,55 @@ namespace WindowsFormsApplication2
             leavefullScreenMode();
         }
 
-    class Globals
-    {
-        public static int setTimeMinutes;
-        public const int minuteTime = 1000 * 60;
-        public static int initCountDown;
-        public const string titleBarText = "EyeSight";
-        public const string pauseText = "Running...";
-        public const string startText = "Start";
-        public const string timeLeftText = " minutes left";
-        public const string pauseFinishedText = "Pause is finished";
-        public const string messagePauseText = "Pause?";
-        public const string messagePauseTitle = "Pause?";
-        public const string screenMode = "";
-        public const string dateText = "Today is ";
-        public static bool pauseCycleRunning = false; 
-    }
+        private class Globals
+        {
+            public static int setTimeMinutes;
+            public const int minuteTime = 1000 * 60;
+            public static int initCountDown;
+            public const string titleBarText = "EyeSight";
+            public const string pauseText = "Running...";
+            public const string startText = "Start";
+            public const string timeLeftText = " minutes left";
+            public const string pauseFinishedText = "Pause is finished";
+            public const string messagePauseText = "Pause?";
+            public const string messagePauseTitle = "Pause?";
+            public const string screenMode = "";
+            public const string dateText = "Today is ";
+            public static bool pauseCycleRunning = false;
+        }
+        private class UserInput
+        {
+            public static int cyclePause;
+            public static int cycleWork;
+        }
+        
 
-}
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+        private RadioButton searchCheckedRadio() {
+
+            var radioButtonSelected = groupBoxMode.Controls.OfType<RadioButton>()
+                .FirstOrDefault(r => r.Checked);
+            return radioButtonSelected;
+        }
+        private void currentDateLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+        
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            UserInput.cyclePause = 7;
+            UserInput.cycleWork = 27;
+               
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            UserInput.cyclePause = 10;
+            UserInput.cycleWork = 45;
+        }
+    }
 }
