@@ -1,54 +1,34 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
-using System.ComponentModel;
 using System.Linq;
 
 namespace WindowsFormsApplication2
 {
-
     public partial class FormWindow : Form
     {
         public FormWindow()
         {
             InitializeComponent();
-
+            this.debugMode(false);
         }
         private void Form1_Load(object sender, EventArgs e)
         {
             timerDisplayCountDown.Interval = Globals.minuteTime;
             currentDateLabel.Text = Globals.dateText + DateTime.Now.ToLongDateString();
             this.Text = Globals.titleBarText;
-            btnScreenMode.Visible = false;
-            panelScreenMode.Visible = false;
+            leaveFullScreenImage.Visible = Globals.debugMode;
             flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
             //Handlers
-            panelScreenMode.MouseMove += new MouseEventHandler(panelTest_MouseMove);
-            btnScreenMode.MouseLeave += new EventHandler(panelTest_MouseLeave);
             this.Resize += new EventHandler(flowLayoutPanelMain_Resize);
-        }
-        private void panelTest_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (btnScreenMode.Bounds.Contains(e.Location) && !btnScreenMode.Visible)
-            {
-                btnScreenMode.Visible = true;
-            }
+            
+            leaveFullScreenImage.Click += leaveFullScreen_Click;
+           
 
         }
-        private void panelTest_MouseLeave(object sender, EventArgs e)
-        {
-            btnScreenMode.Hide();
-        }
-        private void panelTest_MouseEnter(object sender, EventArgs e)
-        {
-            btnScreenMode.Show();
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             startTimerCycle(false);
         }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             timerDisplayCountDown.Stop();
@@ -65,7 +45,6 @@ namespace WindowsFormsApplication2
                 countDownWorkLabel.Text = Globals.pauseFinishedText.ToString();
             }
         }
-
         private void timer1_Tick_1(object sender, EventArgs e)
         {
             Globals.initCountDown -= 1;
@@ -86,19 +65,18 @@ namespace WindowsFormsApplication2
         {
             if (pause == false)
             {
-                Globals.setTimeMinutes = UserInput.cycleWork;
-                
+                Globals.setTimeMinutes = UserMode.cycleWork;    
             }
             else
             {
-                Globals.setTimeMinutes = UserInput.cyclePause;
+                Globals.setTimeMinutes = UserMode.cyclePause;
             }
             int time = Globals.setTimeMinutes;
             Globals.initCountDown = time;
         }
         private void fullScreenMode()
         {
-            panelScreenMode.Visible = true;
+            leaveFullScreenImage.Visible = true;
             this.TopMost = true;
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
@@ -106,7 +84,7 @@ namespace WindowsFormsApplication2
         }
         private void leavefullScreenMode()
         {
-            panelScreenMode.Visible = false;
+            leaveFullScreenImage.Visible = false;
             this.TopMost = false;
             this.FormBorderStyle = FormBorderStyle.Sizable;
             this.WindowState = FormWindowState.Normal;
@@ -120,8 +98,9 @@ namespace WindowsFormsApplication2
         private void flowLayoutPanelMain_Resize(object sender, EventArgs e)
         {
             flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
-        }
+            leaveFullScreenImage.Left = this.ClientSize.Width - leaveFullScreenImage.Size.Width;
 
+        }
         private void messageBoxPause()
         {
             DialogResult msgPause = MessageBox.Show(
@@ -135,22 +114,71 @@ namespace WindowsFormsApplication2
                 startTimerCycle(false);
             }
         }
+        private void leaveFullScreen_Click(object sender, EventArgs e)
+        {
+            leavefullScreenMode();          
+        }
+
+        public class UserMode {
+            public static int cyclePause = ModeList.hardMode.getCycles()[0];
+            public static int cycleWork = ModeList.hardMode.getCycles()[1];
+
+        }
+        public static class ModeList
+        {
+            public static readonly WorkMode hardMode = new WorkMode(7, 27);
+            public static readonly WorkMode lightMode = new WorkMode(5, 15);
+            public static readonly WorkMode debugMode = new WorkMode(1, 2);
+            public static WorkMode userMode;
+        }
+        public class WorkMode
+        {
+            private int cyclePause;
+            private int cycleWork;
+
+            public WorkMode(int pause, int work){
+                this.cyclePause = pause;
+                this.cycleWork = work;
+        }
+            public int[] getCycles()
+            {
+               return new[] { this.cyclePause, this.cycleWork};
+            }
+        }
+
+        private RadioButton searchCheckedRadio() {
+
+            var radioButtonSelected = groupBoxMode.Controls.OfType<RadioButton>()
+                .FirstOrDefault(r => r.Checked);
+            return radioButtonSelected;
+        }
+        
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            UserMode.cyclePause = ModeList.hardMode.getCycles()[0];
+            UserMode.cycleWork = ModeList.hardMode.getCycles()[1];
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            UserMode.cyclePause = ModeList.lightMode.getCycles()[0];
+            UserMode.cycleWork = ModeList.lightMode.getCycles()[1];
+        }
         private void labelCountDownWork_Click(object sender, EventArgs e)
         {
 
         }
-        private void panelTest_Paint(object sender, PaintEventArgs e)
+        private void currentDateLabel_Click(object sender, EventArgs e)
         {
 
         }
-
-        private void buttonTest_Click(object sender, EventArgs e)
+        private void groupBox1_Enter(object sender, EventArgs e)
         {
-            leavefullScreenMode();
-        }
 
+        }
         private class Globals
         {
+            public static bool debugMode = false;
             public static int setTimeMinutes;
             public const int minuteTime = 1000 * 60;
             public static int initCountDown;
@@ -165,39 +193,14 @@ namespace WindowsFormsApplication2
             public const string dateText = "Today is ";
             public static bool pauseCycleRunning = false;
         }
-        private class UserInput
+        public void debugMode(bool debugMode)
         {
-            public static int cyclePause;
-            public static int cycleWork;
-        }
-        
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-        private RadioButton searchCheckedRadio() {
-
-            var radioButtonSelected = groupBoxMode.Controls.OfType<RadioButton>()
-                .FirstOrDefault(r => r.Checked);
-            return radioButtonSelected;
-        }
-        private void currentDateLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-        
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-            UserInput.cyclePause = 7;
-            UserInput.cycleWork = 27;
-               
-        }
-
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
-        {
-            UserInput.cyclePause = 10;
-            UserInput.cycleWork = 45;
+            if (debugMode)
+            {
+                Globals.debugMode = true;
+                UserMode.cyclePause = ModeList.debugMode.getCycles()[0];
+                UserMode.cycleWork = ModeList.debugMode.getCycles()[0];
+            }
         }
     }
 }

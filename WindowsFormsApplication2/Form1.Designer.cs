@@ -31,22 +31,21 @@
             this.components = new System.ComponentModel.Container();
             this.timerWindowApp = new System.Windows.Forms.Timer(this.components);
             this.timerDisplayCountDown = new System.Windows.Forms.Timer(this.components);
-            this.btnScreenMode = new System.Windows.Forms.Button();
-            this.panelScreenMode = new System.Windows.Forms.Panel();
             this.currentDateLabel = new System.Windows.Forms.Label();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.groupBoxMode = new System.Windows.Forms.GroupBox();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.flowLayoutPanelControl = new System.Windows.Forms.FlowLayoutPanel();
+            this.splitter1 = new System.Windows.Forms.Splitter();
             this.btnTimerWorkCycle = new System.Windows.Forms.Button();
             this.countDownWorkLabel = new System.Windows.Forms.Label();
-            this.splitter1 = new System.Windows.Forms.Splitter();
             this.flowLayoutPanelMain = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanelExercise = new System.Windows.Forms.FlowLayoutPanel();
-            this.panelScreenMode.SuspendLayout();
+            this.leaveFullScreenImage = new System.Windows.Forms.PictureBox();
             this.groupBoxMode.SuspendLayout();
             this.flowLayoutPanelControl.SuspendLayout();
             this.flowLayoutPanelMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.leaveFullScreenImage)).BeginInit();
             this.SuspendLayout();
             // 
             // timerWindowApp
@@ -58,28 +57,6 @@
             // 
             this.timerDisplayCountDown.Interval = 1000;
             this.timerDisplayCountDown.Tick += new System.EventHandler(this.timer1_Tick_1);
-            // 
-            // btnScreenMode
-            // 
-            this.btnScreenMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnScreenMode.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnScreenMode.Location = new System.Drawing.Point(0, 0);
-            this.btnScreenMode.Name = "btnScreenMode";
-            this.btnScreenMode.Size = new System.Drawing.Size(105, 25);
-            this.btnScreenMode.TabIndex = 4;
-            this.btnScreenMode.Text = "Leave Full Screen";
-            this.btnScreenMode.UseVisualStyleBackColor = true;
-            this.btnScreenMode.Click += new System.EventHandler(this.buttonTest_Click);
-            // 
-            // panelScreenMode
-            // 
-            this.panelScreenMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelScreenMode.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.panelScreenMode.Controls.Add(this.btnScreenMode);
-            this.panelScreenMode.Location = new System.Drawing.Point(377, 5);
-            this.panelScreenMode.Name = "panelScreenMode";
-            this.panelScreenMode.Size = new System.Drawing.Size(105, 25);
-            this.panelScreenMode.TabIndex = 4;
             // 
             // currentDateLabel
             // 
@@ -149,6 +126,15 @@
             this.flowLayoutPanelControl.Size = new System.Drawing.Size(215, 240);
             this.flowLayoutPanelControl.TabIndex = 8;
             // 
+            // splitter1
+            // 
+            this.splitter1.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.splitter1.Location = new System.Drawing.Point(3, 31);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(215, 1);
+            this.splitter1.TabIndex = 10;
+            this.splitter1.TabStop = false;
+            // 
             // btnTimerWorkCycle
             // 
             this.btnTimerWorkCycle.BackColor = System.Drawing.Color.Crimson;
@@ -180,15 +166,6 @@
             this.countDownWorkLabel.TabIndex = 9;
             this.countDownWorkLabel.Text = "timer is  stopped";
             // 
-            // splitter1
-            // 
-            this.splitter1.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.splitter1.Location = new System.Drawing.Point(3, 31);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(215, 1);
-            this.splitter1.TabIndex = 10;
-            this.splitter1.TabStop = false;
-            // 
             // flowLayoutPanelMain
             // 
             this.flowLayoutPanelMain.Controls.Add(this.flowLayoutPanelControl);
@@ -208,6 +185,20 @@
             this.flowLayoutPanelExercise.Size = new System.Drawing.Size(197, 240);
             this.flowLayoutPanelExercise.TabIndex = 9;
             // 
+            // leaveFullScreenImage
+            // 
+            this.leaveFullScreenImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.leaveFullScreenImage.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.leaveFullScreenImage.BackgroundImage = global::eyesightapp.Properties.Resources.leave_full_screen_mode;
+            this.leaveFullScreenImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.leaveFullScreenImage.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.leaveFullScreenImage.Location = new System.Drawing.Point(455, 10);
+            this.leaveFullScreenImage.Margin = new System.Windows.Forms.Padding(0);
+            this.leaveFullScreenImage.Name = "leaveFullScreenImage";
+            this.leaveFullScreenImage.Size = new System.Drawing.Size(20, 20);
+            this.leaveFullScreenImage.TabIndex = 10;
+            this.leaveFullScreenImage.TabStop = false;
+            // 
             // FormWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -217,19 +208,20 @@
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(484, 461);
+            this.Controls.Add(this.leaveFullScreenImage);
             this.Controls.Add(this.flowLayoutPanelMain);
-            this.Controls.Add(this.panelScreenMode);
+            this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Name = "FormWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.panelScreenMode.ResumeLayout(false);
             this.groupBoxMode.ResumeLayout(false);
             this.groupBoxMode.PerformLayout();
             this.flowLayoutPanelControl.ResumeLayout(false);
             this.flowLayoutPanelControl.PerformLayout();
             this.flowLayoutPanelMain.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.leaveFullScreenImage)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -237,8 +229,6 @@
         #endregion
         private System.Windows.Forms.Timer timerWindowApp;
         private System.Windows.Forms.Timer timerDisplayCountDown;
-        private System.Windows.Forms.Button btnScreenMode;
-        private System.Windows.Forms.Panel panelScreenMode;
         private System.Windows.Forms.Label currentDateLabel;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.GroupBox groupBoxMode;
@@ -249,6 +239,7 @@
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelMain;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelExercise;
+        private System.Windows.Forms.PictureBox leaveFullScreenImage;
     }
 }
 
