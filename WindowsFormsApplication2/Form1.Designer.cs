@@ -42,10 +42,12 @@
             this.flowLayoutPanelMain = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanelExercise = new System.Windows.Forms.FlowLayoutPanel();
             this.leaveFullScreenImage = new System.Windows.Forms.PictureBox();
+            this.controlFullViewPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBoxMode.SuspendLayout();
             this.flowLayoutPanelControl.SuspendLayout();
             this.flowLayoutPanelMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.leaveFullScreenImage)).BeginInit();
+            this.controlFullViewPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // timerWindowApp
@@ -192,12 +194,22 @@
             this.leaveFullScreenImage.BackgroundImage = global::eyesightapp.Properties.Resources.leave_full_screen_mode;
             this.leaveFullScreenImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.leaveFullScreenImage.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.leaveFullScreenImage.Location = new System.Drawing.Point(455, 10);
+            this.leaveFullScreenImage.Location = new System.Drawing.Point(564, 0);
             this.leaveFullScreenImage.Margin = new System.Windows.Forms.Padding(0);
             this.leaveFullScreenImage.Name = "leaveFullScreenImage";
             this.leaveFullScreenImage.Size = new System.Drawing.Size(20, 20);
             this.leaveFullScreenImage.TabIndex = 10;
             this.leaveFullScreenImage.TabStop = false;
+            // 
+            // controlFullViewPanel
+            // 
+            this.controlFullViewPanel.Controls.Add(this.leaveFullScreenImage);
+            this.controlFullViewPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.controlFullViewPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.controlFullViewPanel.Location = new System.Drawing.Point(0, 0);
+            this.controlFullViewPanel.Name = "controlFullViewPanel";
+            this.controlFullViewPanel.Size = new System.Drawing.Size(584, 21);
+            this.controlFullViewPanel.TabIndex = 13;
             // 
             // FormWindow
             // 
@@ -207,8 +219,8 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Desktop;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(484, 461);
-            this.Controls.Add(this.leaveFullScreenImage);
+            this.ClientSize = new System.Drawing.Size(584, 361);
+            this.Controls.Add(this.controlFullViewPanel);
             this.Controls.Add(this.flowLayoutPanelMain);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Name = "FormWindow";
@@ -222,6 +234,7 @@
             this.flowLayoutPanelControl.PerformLayout();
             this.flowLayoutPanelMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.leaveFullScreenImage)).EndInit();
+            this.controlFullViewPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -240,6 +253,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelMain;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelExercise;
         private System.Windows.Forms.PictureBox leaveFullScreenImage;
+        private System.Windows.Forms.FlowLayoutPanel controlFullViewPanel;
     }
 }
 

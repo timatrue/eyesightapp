@@ -1,30 +1,35 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Linq;
+using System.Drawing;
 
 namespace WindowsFormsApplication2
 {
     public partial class FormWindow : Form
     {
+        
         public FormWindow()
         {
             InitializeComponent();
-            this.debugMode(false);
+            this.debugMode(true);
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            timerDisplayCountDown.Interval = Globals.minuteTime;
-            currentDateLabel.Text = Globals.dateText + DateTime.Now.ToLongDateString();
+            this.WindowState = FormWindowState.Normal;
+            this.Top = (Screen.PrimaryScreen.Bounds.Height - this.Height) / 2;
+            this.Left = (Screen.PrimaryScreen.Bounds.Width - this.Width) / 2;
             this.Text = Globals.titleBarText;
+
+
+            timerDisplayCountDown.Interval = Globals.minuteTime;
+            currentDateLabel.Text = Globals.dateText + DateTime.Now.ToLongDateString();            
             leaveFullScreenImage.Visible = Globals.debugMode;
             flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
             //Handlers
-            this.Resize += new EventHandler(flowLayoutPanelMain_Resize);
-            
-            leaveFullScreenImage.Click += leaveFullScreen_Click;
-           
-
+            this.Resize += new EventHandler(flowLayoutPanelMain_Resize);         
+            leaveFullScreenImage.Click += leaveFullScreen_Click;           
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
             startTimerCycle(false);
@@ -78,8 +83,11 @@ namespace WindowsFormsApplication2
         {
             leaveFullScreenImage.Visible = true;
             this.TopMost = true;
+            this.WindowState = FormWindowState.Normal;
+            //if (this.WindowState != FormWindowState.Maximized) this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
+            this.Bounds = Screen.PrimaryScreen.Bounds;
+
             System.Media.SystemSounds.Asterisk.Play();
         }
         private void leavefullScreenMode()
@@ -89,17 +97,13 @@ namespace WindowsFormsApplication2
             this.FormBorderStyle = FormBorderStyle.Sizable;
             this.WindowState = FormWindowState.Normal;
         }
-        private void minimizedMode()
-        {
-            this.CenterToScreen();
-            if (this.WindowState == FormWindowState.Minimized)
-                this.WindowState = FormWindowState.Normal;
-        }
         private void flowLayoutPanelMain_Resize(object sender, EventArgs e)
         {
             flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
-            leaveFullScreenImage.Left = this.ClientSize.Width - leaveFullScreenImage.Size.Width;
-
+        }
+        public Rectangle GetScreen()
+        {
+            return Screen.FromControl(this).Bounds;
         }
         private void messageBoxPause()
         {
@@ -118,11 +122,9 @@ namespace WindowsFormsApplication2
         {
             leavefullScreenMode();          
         }
-
         public class UserMode {
             public static int cyclePause = ModeList.hardMode.getCycles()[0];
             public static int cycleWork = ModeList.hardMode.getCycles()[1];
-
         }
         public static class ModeList
         {
@@ -202,5 +204,15 @@ namespace WindowsFormsApplication2
                 UserMode.cycleWork = ModeList.debugMode.getCycles()[0];
             }
         }
+        public void debugScreen() {
+            String x1 = Screen.PrimaryScreen.Bounds.Width.ToString();
+            String x2 = Screen.PrimaryScreen.Bounds.Width.ToString();
+            String y1 = Screen.PrimaryScreen.Bounds.Height.ToString();
+            String y2 = Screen.PrimaryScreen.Bounds.Height.ToString();
+            MessageBox.Show("Height" + this.Height + " " + y1 + " " + y2
+                +" "+ "Width" + this.Width + " " + x1 + " " + x2);
+        }
+
+
     }
 }
