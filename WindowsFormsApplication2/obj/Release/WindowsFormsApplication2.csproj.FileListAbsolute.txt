@@ -6,3 +6,4 @@ C:\Users\artem\documents\visual studio 2015\Projects\WindowsFormsApplication2\Wi
 C:\Users\artem\documents\visual studio 2015\Projects\WindowsFormsApplication2\WindowsFormsApplication2\obj\Release\eyesightapp.Properties.Resources.resources
 C:\Users\artem\documents\visual studio 2015\Projects\WindowsFormsApplication2\WindowsFormsApplication2\obj\Release\eyesightapp.exe
 C:\Users\artem\documents\visual studio 2015\Projects\WindowsFormsApplication2\WindowsFormsApplication2\obj\Release\eyesightapp.pdb
+C:\Users\artem\documents\visual studio 2015\Projects\WindowsFormsApplication2\WindowsFormsApplication2\obj\Release\WindowsFormsApplication2.csprojResolveAssemblyReference.cache
