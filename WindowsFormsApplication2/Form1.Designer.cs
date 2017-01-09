@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormWindow));
             this.timerWindowApp = new System.Windows.Forms.Timer(this.components);
             this.timerDisplayCountDown = new System.Windows.Forms.Timer(this.components);
             this.currentDateLabel = new System.Windows.Forms.Label();
@@ -53,12 +54,12 @@
             // timerWindowApp
             // 
             this.timerWindowApp.Interval = 5000;
-            this.timerWindowApp.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timerWindowApp.Tick += new System.EventHandler(this.timerMain_Tick);
             // 
             // timerDisplayCountDown
             // 
             this.timerDisplayCountDown.Interval = 1000;
-            this.timerDisplayCountDown.Tick += new System.EventHandler(this.timer1_Tick_1);
+            this.timerDisplayCountDown.Tick += new System.EventHandler(this.timerMinuteLeft_Tick);
             // 
             // currentDateLabel
             // 
@@ -75,7 +76,6 @@
             this.currentDateLabel.TabIndex = 5;
             this.currentDateLabel.Text = "dateLabel";
             this.currentDateLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.currentDateLabel.Click += new System.EventHandler(this.currentDateLabel_Click);
             // 
             // radioButton1
             // 
@@ -103,7 +103,6 @@
             this.groupBoxMode.TabIndex = 7;
             this.groupBoxMode.TabStop = false;
             this.groupBoxMode.Text = "Choose mode:";
-            this.groupBoxMode.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // radioButton2
             // 
@@ -225,9 +224,10 @@
             this.Controls.Add(this.controlFullViewPanel);
             this.Controls.Add(this.flowLayoutPanelMain);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Form1";
+            this.Text = "EyeSight";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBoxMode.ResumeLayout(false);

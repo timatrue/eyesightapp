@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Linq;
 using System.Drawing;
-
+using System.Diagnostics;
+using System.Reflection;
 
 namespace WindowsFormsApplication2
 {
@@ -18,7 +18,7 @@ namespace WindowsFormsApplication2
             this.WindowState = FormWindowState.Normal;
             this.Top = (Screen.PrimaryScreen.Bounds.Height - this.Height) / 2;
             this.Left = (Screen.PrimaryScreen.Bounds.Width - this.Width) / 2;
-            this.Text = Globals.titleBarText;
+            this.Text = Globals.titleBarText;  
             btnTimerWorkCycle.Text = Globals.startText;
 
             timerDisplayCountDown.Interval = Globals.minuteTime;
@@ -35,12 +35,12 @@ namespace WindowsFormsApplication2
             if(Process.getState() == State.InActive) startTimerCycle(false);
             else if(Process.getState() == State.Work) startTimerCycle(true);
             else if (Process.getState() == State.Pause) startTimerCycle(false);
+            setIconsApp();
         }
-        private void timer1_Tick(object sender, EventArgs e)
+        private void timerMain_Tick(object sender, EventArgs e)
         {
             timerDisplayCountDown.Stop();
             timerWindowApp.Stop();
-            
             fullScreenMode();
             btnTimerWorkCycle.Text = Globals.startText;
             if (Globals.pauseCycleRunning == false)
@@ -54,7 +54,7 @@ namespace WindowsFormsApplication2
             }
             Process.setState(State.InActive);
         }
-        private void timer1_Tick_1(object sender, EventArgs e)
+        private void timerMinuteLeft_Tick(object sender, EventArgs e)
         {
             Globals.initCountDown -= 1;
             countDownWorkLabel.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
@@ -82,8 +82,7 @@ namespace WindowsFormsApplication2
             else
             {
                 Globals.setTimeMinutes = UserMode.cyclePause;
-                Process.setState(State.Pause);
-                
+                Process.setState(State.Pause);                
                 btnTimerWorkCycle.BackColor = Color.Red;
             }
             int time = Globals.setTimeMinutes;
@@ -110,7 +109,7 @@ namespace WindowsFormsApplication2
         {
             flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
         }
-        public Rectangle GetScreen()
+        private Rectangle GetScreen()
         {
             return Screen.FromControl(this).Bounds;
         }
@@ -124,103 +123,31 @@ namespace WindowsFormsApplication2
             }
             else if (msgPause == DialogResult.No)
             {
-                startTimerCycle(false);
-                
+                startTimerCycle(false);            
             }
         }
         private void leaveFullScreen_Click(object sender, EventArgs e)
         {
             leavefullScreenMode();          
         }
-        public class UserMode {
-            public static int cyclePause = ModeList.hardMode.getCycles()[0];
-            public static int cycleWork = ModeList.hardMode.getCycles()[1];
-        }
-        public static class ModeList
-        {
-            public static readonly WorkMode hardMode = new WorkMode(7, 27);
-            public static readonly WorkMode lightMode = new WorkMode(5, 15);
-            public static readonly WorkMode debugMode = new WorkMode(1, 3);
-            public static WorkMode userMode;
-        }
-        public class WorkMode
-        {
-            private int cyclePause;
-            private int cycleWork;
-
-            public WorkMode(int pause, int work){
-                this.cyclePause = pause;
-                this.cycleWork = work;
-        }
-            public int[] getCycles()
-            {
-               return new[] { this.cyclePause, this.cycleWork};
-            }
-        }
-
-        private RadioButton searchCheckedRadio() {
-
-            var radioButtonSelected = groupBoxMode.Controls.OfType<RadioButton>()
-                .FirstOrDefault(r => r.Checked);
-            return radioButtonSelected;
-        }
-        
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             UserMode.cyclePause = ModeList.hardMode.getCycles()[0];
             UserMode.cycleWork = ModeList.hardMode.getCycles()[1];
         }
-
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
             UserMode.cyclePause = ModeList.lightMode.getCycles()[0];
             UserMode.cycleWork = ModeList.lightMode.getCycles()[1];
         }
-        private void labelCountDownWork_Click(object sender, EventArgs e)
+        private void setIconsApp()
         {
-
+            Icon defaultIcon = eyesightapp.Properties.Resources.favicon;
+            Icon workIcon = eyesightapp.Properties.Resources.faviconOrange;
+            if (Process.getState() == State.Pause) this.Icon = defaultIcon;
+            else this.Icon = workIcon;
         }
-        private void currentDateLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-        public enum State {Pause, Work, InActive };
-
-        public static class Process {
-            private static State state;
-            public static void setState(State state) {
-                Process.state = state;
-            }
-            public static State getState() {
-                return Process.state;
-            }
-        }
-        private class Globals
-        {
-            public static bool debugMode = false;
-            public static bool pauseCycleRunning = false;
-            public static int setTimeMinutes;
-            public const int minuteTime = 1000 * 60;
-            public static int initCountDown;
-            public const string titleBarText = "EyeSight";
-            public const string pauseText = "Go to break";
-            public const string startText = "Start work";
-            public const string timeLeftText = " minutes left";
-            public const string pauseFinishedText = "Break is finished";
-            public const string workFinishedText = "Work is finished";
-            public const string messagePauseText = "Break!";
-            public const string messagePauseTitle = "It's time to have a break.";
-            public const string screenMode = "";
-            public const string dateText = "Today is ";
-            Color redColor = ColorTranslator.FromHtml("#E74C3C");
-            Color blueColor = ColorTranslator.FromHtml("#3498DB");
-
-        }
-        public void debugMode(bool debugMode)
+        private void debugMode(bool debugMode)
         {
             if (debugMode)
             {
@@ -229,7 +156,7 @@ namespace WindowsFormsApplication2
                 UserMode.cycleWork = ModeList.debugMode.getCycles()[1];
             }
         }
-        public void debugScreen() {
+        private void debugScreen() {
             String x1 = Screen.PrimaryScreen.Bounds.Width.ToString();
             String x2 = Screen.PrimaryScreen.Bounds.Width.ToString();
             String y1 = Screen.PrimaryScreen.Bounds.Height.ToString();
@@ -237,7 +164,71 @@ namespace WindowsFormsApplication2
             MessageBox.Show("Height" + this.Height + " " + y1 + " " + y2
                 +" "+ "Width" + this.Width + " " + x1 + " " + x2);
         }
+        private void debugResourses()
+        {
+            string[] debug = Assembly.GetExecutingAssembly().GetManifestResourceNames();
 
-
+            foreach (var item in debug)
+            {
+                Debug.WriteLine(item.ToString());
+            }
+        }
+    }
+    static class Process
+    {
+        private static State state;
+        public static void setState(State state)
+        {
+            Process.state = state;
+        }
+        public static State getState()
+        {
+            return Process.state;
+        }
+    }
+    class UserMode
+    {
+        public static int cyclePause = ModeList.hardMode.getCycles()[0];
+        public static int cycleWork = ModeList.hardMode.getCycles()[1];
+    }
+    static class ModeList
+    {
+        public static readonly WorkMode hardMode = new WorkMode(7, 27);
+        public static readonly WorkMode lightMode = new WorkMode(5, 15);
+        public static readonly WorkMode debugMode = new WorkMode(1, 3);
+        public static WorkMode userMode;
+    }
+    class WorkMode
+    {
+        private int cyclePause;
+        private int cycleWork;
+        public WorkMode(int pause, int work)
+        {
+            this.cyclePause = pause;
+            this.cycleWork = work;
+        }
+        public int[] getCycles()
+        {
+            return new[] { this.cyclePause, this.cycleWork };
+        }
+    }
+    enum State { Pause, Work, InActive };
+    class Globals
+    {
+        public static bool debugMode = false;
+        public static bool pauseCycleRunning = false;
+        public static int setTimeMinutes;
+        public static int initCountDown;
+        public const int minuteTime = 1000 * 60;
+        public const string titleBarText = "EyeSight";
+        public const string pauseText = "Go to break";
+        public const string startText = "Start work";
+        public const string timeLeftText = " minutes left";
+        public const string pauseFinishedText = "Break is finished";
+        public const string workFinishedText = "Work is finished";
+        public const string messagePauseText = "Break!";
+        public const string messagePauseTitle = "It's time to have a break.";
+        public const string screenMode = "";
+        public const string dateText = "Today is ";
     }
 }
