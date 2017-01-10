@@ -8,34 +8,55 @@ namespace WindowsFormsApplication2
 {
     public partial class FormWindow : Form
     {
+        private Icon defaultIcon = eyesightapp.Properties.Resources.favicon;
+        private Icon workIcon = eyesightapp.Properties.Resources.faviconOrange;
+
         public FormWindow()
         {
             InitializeComponent();
-            this.debugMode(false);           
+            this.debugMode(false);               
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            Process.setState(State.InActive);
             this.WindowState = FormWindowState.Normal;
             this.Top = (Screen.PrimaryScreen.Bounds.Height - this.Height) / 2;
             this.Left = (Screen.PrimaryScreen.Bounds.Width - this.Width) / 2;
             this.Text = Globals.titleBarText;  
-            btnTimerWorkCycle.Text = Globals.startText;
-
             timerDisplayCountDown.Interval = Globals.minuteTime;
             currentDateLabel.Text = Globals.dateText + DateTime.Now.ToLongDateString();            
             leaveFullScreenImage.Visible = Globals.debugMode;
+            btnTimerWorkCycle.Text = Globals.startText;
             flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
             //Handlers
             this.Resize += new EventHandler(flowLayoutPanelMain_Resize);         
             leaveFullScreenImage.Click += leaveFullScreen_Click;           
         }
-
         private void btnStartCycle_Click(object sender, EventArgs e)
-        {           
-            if(Process.getState() == State.InActive) startTimerCycle(false);
-            else if(Process.getState() == State.Work) startTimerCycle(true);
-            else if (Process.getState() == State.Pause) startTimerCycle(false);
+        {
+            startTimerCycle(Process.getState());        
+        }
+        private void startTimerCycle(State state)
+        {            
+            setTimeInterval(state);
+            this.stateDebugLabel.Text = Process.getState().ToString();
+            setNewCycle();
             setIconsApp();
+        }
+        private void setTimeInterval(State state)
+        {
+            if (state != State.Work )
+            {
+                Globals.setTimeMinutes = UserMode.cycleWork;
+                Process.setState(State.Work);
+                btnTimerWorkCycle.BackColor = Color.DodgerBlue;
+                btnTimerWorkCycle.Text = Globals.pauseText;
+            } else {
+                Globals.setTimeMinutes = UserMode.cyclePause;
+                Process.setState(State.Pause);
+                btnTimerWorkCycle.BackColor = Color.Red;
+                btnTimerWorkCycle.Text = Globals.startText;
+            }            
         }
         private void timerMain_Tick(object sender, EventArgs e)
         {
@@ -43,50 +64,46 @@ namespace WindowsFormsApplication2
             timerWindowApp.Stop();
             fullScreenMode();
             btnTimerWorkCycle.Text = Globals.startText;
-            if (Globals.pauseCycleRunning == false)
+            if (Process.getState() != State.Pause)
             {
                 countDownWorkLabel.Text = Globals.workFinishedText;
                 messageBoxPause();
-            }
-            else
-            {
+            } else {
                 countDownWorkLabel.Text = Globals.pauseFinishedText.ToString();
+                Process.setState(State.InActive);
             }
-            Process.setState(State.InActive);
+            this.stateDebugLabel.Text = Process.getState().ToString();                  
         }
         private void timerMinuteLeft_Tick(object sender, EventArgs e)
         {
             Globals.initCountDown -= 1;
             countDownWorkLabel.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
         }
-        private void startTimerCycle(bool pause)
-        { 
-            Globals.pauseCycleRunning = pause;
-            setTimeInterval(pause);
-            timerWindowApp.Interval = Globals.setTimeMinutes * Globals.minuteTime;
-            if (pause == false) btnTimerWorkCycle.Text = Globals.pauseText;
-            else btnTimerWorkCycle.Text = Globals.startText;
-            countDownWorkLabel.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
-            this.TopMost = false;
-            timerDisplayCountDown.Start();
-            timerWindowApp.Start();
-        }
-        private void setTimeInterval(bool pause)
+        private void messageBoxPause()
         {
-            if (pause == false)
+            btnTimerWorkCycle.BackColor = Color.Red;
+            DialogResult msgPause = MessageBox.Show(
+                    Globals.messagePauseTitle, Globals.messagePauseText, MessageBoxButtons.YesNo);
+            if (msgPause == DialogResult.Yes)
+            {
+                startTimerCycle(Process.getState());
+            }
+            else if (msgPause == DialogResult.No)
             {
                 Globals.setTimeMinutes = UserMode.cycleWork;
-                Process.setState(State.Work);
-                btnTimerWorkCycle.BackColor = Color.DodgerBlue;             
+                btnTimerWorkCycle.BackColor = Color.DodgerBlue;
+                btnTimerWorkCycle.Text = Globals.pauseText;
+                setNewCycle();
             }
-            else
-            {
-                Globals.setTimeMinutes = UserMode.cyclePause;
-                Process.setState(State.Pause);                
-                btnTimerWorkCycle.BackColor = Color.Red;
-            }
+        }
+        private void setNewCycle() {
+            this.TopMost = false;
             int time = Globals.setTimeMinutes;
             Globals.initCountDown = time;
+            timerWindowApp.Interval = Globals.setTimeMinutes * Globals.minuteTime;
+            countDownWorkLabel.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
+            timerDisplayCountDown.Start();
+            timerWindowApp.Start();
         }
         private void fullScreenMode()
         {
@@ -109,26 +126,13 @@ namespace WindowsFormsApplication2
         {
             flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
         }
-        private Rectangle GetScreen()
-        {
-            return Screen.FromControl(this).Bounds;
-        }
-        private void messageBoxPause()
-        {
-            DialogResult msgPause = MessageBox.Show(
-                    Globals.messagePauseTitle, Globals.messagePauseText, MessageBoxButtons.YesNo);
-            if (msgPause == DialogResult.Yes)
-            {
-                startTimerCycle(true);
-            }
-            else if (msgPause == DialogResult.No)
-            {
-                startTimerCycle(false);            
-            }
-        }
         private void leaveFullScreen_Click(object sender, EventArgs e)
         {
             leavefullScreenMode();          
+        }
+        private Rectangle GetScreen()
+        {
+            return Screen.FromControl(this).Bounds;
         }
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
@@ -142,10 +146,8 @@ namespace WindowsFormsApplication2
         }
         private void setIconsApp()
         {
-            Icon defaultIcon = eyesightapp.Properties.Resources.favicon;
-            Icon workIcon = eyesightapp.Properties.Resources.faviconOrange;
-            if (Process.getState() == State.Pause) this.Icon = defaultIcon;
-            else this.Icon = workIcon;
+            if (Process.getState() == State.Work) this.Icon = defaultIcon;
+            else this.Icon = workIcon;          
         }
         private void debugMode(bool debugMode)
         {
@@ -155,7 +157,7 @@ namespace WindowsFormsApplication2
                 UserMode.cyclePause = ModeList.debugMode.getCycles()[0];
                 UserMode.cycleWork = ModeList.debugMode.getCycles()[1];
             }
-        }
+        }    
         private void debugScreen() {
             String x1 = Screen.PrimaryScreen.Bounds.Width.ToString();
             String x2 = Screen.PrimaryScreen.Bounds.Width.ToString();
@@ -167,7 +169,6 @@ namespace WindowsFormsApplication2
         private void debugResourses()
         {
             string[] debug = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-
             foreach (var item in debug)
             {
                 Debug.WriteLine(item.ToString());
@@ -195,7 +196,7 @@ namespace WindowsFormsApplication2
     {
         public static readonly WorkMode hardMode = new WorkMode(7, 27);
         public static readonly WorkMode lightMode = new WorkMode(5, 15);
-        public static readonly WorkMode debugMode = new WorkMode(1, 3);
+        public static readonly WorkMode debugMode = new WorkMode(1, 2);
         public static WorkMode userMode;
     }
     class WorkMode
@@ -216,7 +217,7 @@ namespace WindowsFormsApplication2
     class Globals
     {
         public static bool debugMode = false;
-        public static bool pauseCycleRunning = false;
+        public static bool cancelBreak = false;
         public static int setTimeMinutes;
         public static int initCountDown;
         public const int minuteTime = 1000 * 60;

@@ -44,6 +44,7 @@
             this.flowLayoutPanelExercise = new System.Windows.Forms.FlowLayoutPanel();
             this.leaveFullScreenImage = new System.Windows.Forms.PictureBox();
             this.controlFullViewPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.stateDebugLabel = new System.Windows.Forms.Label();
             this.groupBoxMode.SuspendLayout();
             this.flowLayoutPanelControl.SuspendLayout();
             this.flowLayoutPanelMain.SuspendLayout();
@@ -124,6 +125,7 @@
             this.flowLayoutPanelControl.Controls.Add(this.groupBoxMode);
             this.flowLayoutPanelControl.Controls.Add(this.btnTimerWorkCycle);
             this.flowLayoutPanelControl.Controls.Add(this.countDownWorkLabel);
+            this.flowLayoutPanelControl.Controls.Add(this.stateDebugLabel);
             this.flowLayoutPanelControl.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelControl.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanelControl.Name = "flowLayoutPanelControl";
@@ -212,6 +214,15 @@
             this.controlFullViewPanel.Size = new System.Drawing.Size(584, 30);
             this.controlFullViewPanel.TabIndex = 13;
             // 
+            // stateDebugLabel
+            // 
+            this.stateDebugLabel.AutoSize = true;
+            this.stateDebugLabel.Location = new System.Drawing.Point(3, 196);
+            this.stateDebugLabel.Name = "stateDebugLabel";
+            this.stateDebugLabel.Size = new System.Drawing.Size(62, 13);
+            this.stateDebugLabel.TabIndex = 11;
+            this.stateDebugLabel.Text = "stateDebug";
+            // 
             // FormWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -256,6 +267,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelExercise;
         private System.Windows.Forms.PictureBox leaveFullScreenImage;
         private System.Windows.Forms.FlowLayoutPanel controlFullViewPanel;
+        private System.Windows.Forms.Label stateDebugLabel;
     }
 }
 
