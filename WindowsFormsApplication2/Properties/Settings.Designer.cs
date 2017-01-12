@@ -22,5 +22,29 @@ namespace eyesightapp.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("35")]
+        public int customWork {
+            get {
+                return ((int)(this["customWork"]));
+            }
+            set {
+                this["customWork"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int customPause {
+            get {
+                return ((int)(this["customPause"]));
+            }
+            set {
+                this["customPause"] = value;
+            }
+        }
     }
 }

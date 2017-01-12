@@ -10,19 +10,24 @@ namespace WindowsFormsApplication2
     {
         private Icon defaultIcon = eyesightapp.Properties.Resources.favicon;
         private Icon workIcon = eyesightapp.Properties.Resources.faviconOrange;
-
+        //TRANSITION TO instead states;
         public FormWindow()
         {
             InitializeComponent();
             this.debugMode(false);               
         }
+
+
         private void Form1_Load(object sender, EventArgs e)
         {
             Process.setState(State.InActive);
             this.WindowState = FormWindowState.Normal;
             this.Top = (Screen.PrimaryScreen.Bounds.Height - this.Height) / 2;
             this.Left = (Screen.PrimaryScreen.Bounds.Width - this.Width) / 2;
-            this.Text = Globals.titleBarText;  
+            this.Text = Globals.titleBarText;
+            radioBtnModeICustom.Checked = false;
+            numericUpDownPause.Value = eyesightapp.Properties.Settings.Default.customPause;
+            numericUpDownWork.Value = eyesightapp.Properties.Settings.Default.customWork;  
             timerDisplayCountDown.Interval = Globals.minuteTime;
             currentDateLabel.Text = Globals.dateText + DateTime.Now.ToLongDateString();            
             leaveFullScreenImage.Visible = Globals.debugMode;
@@ -134,16 +139,38 @@ namespace WindowsFormsApplication2
         {
             return Screen.FromControl(this).Bounds;
         }
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void radioBtnModeIntense_CheckedChanged(object sender, EventArgs e)
         {
             UserMode.cyclePause = ModeList.hardMode.getCycles()[0];
             UserMode.cycleWork = ModeList.hardMode.getCycles()[1];
         }
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void radioBtnModelRelax_CheckedChanged(object sender, EventArgs e)
         {
             UserMode.cyclePause = ModeList.lightMode.getCycles()[0];
             UserMode.cycleWork = ModeList.lightMode.getCycles()[1];
         }
+        private void radioBtnModeICustom_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (!radioBtnModeICustom.Checked)
+            {
+                numericUpDownWork.ReadOnly = true;
+                numericUpDownWork.Increment = 0;
+                numericUpDownPause.ReadOnly = true;
+                numericUpDownPause.Increment = 0;
+                
+
+            }
+            else
+            {
+                numericUpDownWork.ReadOnly = false;
+                numericUpDownWork.Increment = 1;
+                numericUpDownPause.ReadOnly = false;
+                numericUpDownPause.Increment = 1;
+
+            }
+        }
+
         private void setIconsApp()
         {
             if (Process.getState() == State.Work) this.Icon = defaultIcon;
@@ -174,6 +201,33 @@ namespace WindowsFormsApplication2
                 Debug.WriteLine(item.ToString());
             }
         }
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                //cp.Style &= ~0x02000000; // Turn off WS_CLIPCHILDREN
+                return cp;
+            }
+        }
+        private void numericUpDownWork_ValueChanged(object sender, EventArgs e)
+        {
+            int customWork = (int) numericUpDownWork.Value;
+            eyesightapp.Properties.Settings.Default.customWork = customWork;
+            eyesightapp.Properties.Settings.Default.Save();
+            ModeList.userMode.setCycleWork(eyesightapp.Properties.Settings.Default.customWork);
+            UserMode.cycleWork = ModeList.userMode.getCycles()[1];
+        }
+
+        private void numericUpDownPause_ValueChanged(object sender, EventArgs e)
+        {
+            int customPause = (int)numericUpDownPause.Value;
+            eyesightapp.Properties.Settings.Default.customPause = customPause;
+            eyesightapp.Properties.Settings.Default.Save();
+            ModeList.userMode.setCyclePause(eyesightapp.Properties.Settings.Default.customPause);
+            UserMode.cyclePause = ModeList.userMode.getCycles()[0];
+        }
     }
     static class Process
     {
@@ -197,7 +251,7 @@ namespace WindowsFormsApplication2
         public static readonly WorkMode hardMode = new WorkMode(7, 27);
         public static readonly WorkMode lightMode = new WorkMode(5, 15);
         public static readonly WorkMode debugMode = new WorkMode(1, 2);
-        public static WorkMode userMode;
+        public static WorkMode userMode = new WorkMode(eyesightapp.Properties.Settings.Default.customPause, eyesightapp.Properties.Settings.Default.customWork);
     }
     class WorkMode
     {
@@ -208,6 +262,15 @@ namespace WindowsFormsApplication2
             this.cyclePause = pause;
             this.cycleWork = work;
         }
+        public void setCycleWork(int work)
+        {
+            this.cycleWork = work;
+        }
+        public void setCyclePause(int pause)
+        {
+            this.cyclePause = pause;
+        }
+        
         public int[] getCycles()
         {
             return new[] { this.cyclePause, this.cycleWork };
@@ -221,6 +284,8 @@ namespace WindowsFormsApplication2
         public static int setTimeMinutes;
         public static int initCountDown;
         public const int minuteTime = 1000 * 60;
+        public static int customWork = eyesightapp.Properties.Settings.Default.customWork;
+        public static int customPause = eyesightapp.Properties.Settings.Default.customPause;
         public const string titleBarText = "EyeSight";
         public const string pauseText = "Go to break";
         public const string startText = "Start work";
@@ -232,4 +297,5 @@ namespace WindowsFormsApplication2
         public const string screenMode = "";
         public const string dateText = "Today is ";
     }
+
 }
