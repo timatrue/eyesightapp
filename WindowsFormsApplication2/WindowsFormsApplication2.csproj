@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="images\city-night-sea.jpg" />
+    <None Include="images\icon-close.png" />
     <Content Include="Properties\favicon.ico" />
     <EmbeddedResource Include="images\faviconOrange.ico" />
     <None Include="images\favicon.ico" />

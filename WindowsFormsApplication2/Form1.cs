@@ -10,45 +10,44 @@ namespace WindowsFormsApplication2
     {
         private Icon defaultIcon = eyesightapp.Properties.Resources.favicon;
         private Icon workIcon = eyesightapp.Properties.Resources.faviconOrange;
-        //TRANSITION TO instead states;
         public FormWindow()
         {
             InitializeComponent();
             this.debugMode(false);               
         }
-
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            Process.setState(State.InActive);
+        private void MainForm_Load(object sender, EventArgs e)
+        {         
             this.WindowState = FormWindowState.Normal;
             this.Top = (Screen.PrimaryScreen.Bounds.Height - this.Height) / 2;
             this.Left = (Screen.PrimaryScreen.Bounds.Width - this.Width) / 2;
             this.Text = Globals.titleBarText;
-            radioBtnModeICustom.Checked = false;
+            this.Resize += new EventHandler(flowLayoutPanelMain_Resize);         
+            setInitialControls();
+            setLockNumericUpDown(false);
+            setUserData();
+        }
+        private void setUserData()
+        {
             numericUpDownPause.Value = eyesightapp.Properties.Settings.Default.customPause;
-            numericUpDownWork.Value = eyesightapp.Properties.Settings.Default.customWork;  
+            numericUpDownWork.Value = eyesightapp.Properties.Settings.Default.customWork;
+        }
+        private void setInitialControls() {
+            Process.setState(State.InActive);
             timerDisplayCountDown.Interval = Globals.minuteTime;
-            currentDateLabel.Text = Globals.dateText + DateTime.Now.ToLongDateString();            
+            currentDateLabel.Text = Globals.dateText + DateTime.Now.ToLongDateString();
             leaveFullScreenImage.Visible = Globals.debugMode;
             btnTimerWorkCycle.Text = Globals.startText;
             flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
-            //Handlers
-            this.Resize += new EventHandler(flowLayoutPanelMain_Resize);         
-            leaveFullScreenImage.Click += leaveFullScreen_Click;           
-        }
-        private void btnStartCycle_Click(object sender, EventArgs e)
-        {
-            startTimerCycle(Process.getState());        
+            leaveFullScreenImage.Click += leaveFullScreen_Click;
         }
         private void startTimerCycle(State state)
         {            
-            setTimeInterval(state);
+            setTransitionToState(state);
             this.stateDebugLabel.Text = Process.getState().ToString();
-            setNewCycle();
+            setDataForTimeCycle();          
             setIconsApp();
         }
-        private void setTimeInterval(State state)
+        private void setTransitionToState(State state)
         {
             if (state != State.Work )
             {
@@ -62,6 +61,20 @@ namespace WindowsFormsApplication2
                 btnTimerWorkCycle.BackColor = Color.Red;
                 btnTimerWorkCycle.Text = Globals.startText;
             }            
+        }
+        private void setDataForTimeCycle()
+        {
+            this.TopMost = false;
+            int time = Globals.setTimeMinutes;
+            Globals.initCountDown = time;
+            timerWindowApp.Interval = Globals.setTimeMinutes * Globals.minuteTime;
+            countDownWorkLabel.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
+            timerDisplayCountDown.Start();
+            timerWindowApp.Start();
+        }
+        private void setIconsApp()
+        {
+            this.Icon = (Process.getState() == State.Work) ? defaultIcon : workIcon;
         }
         private void timerMain_Tick(object sender, EventArgs e)
         {
@@ -98,18 +111,12 @@ namespace WindowsFormsApplication2
                 Globals.setTimeMinutes = UserMode.cycleWork;
                 btnTimerWorkCycle.BackColor = Color.DodgerBlue;
                 btnTimerWorkCycle.Text = Globals.pauseText;
-                setNewCycle();
+                setDataForTimeCycle();
             }
         }
-        private void setNewCycle() {
-            this.TopMost = false;
-            int time = Globals.setTimeMinutes;
-            Globals.initCountDown = time;
-            timerWindowApp.Interval = Globals.setTimeMinutes * Globals.minuteTime;
-            countDownWorkLabel.Text = Globals.initCountDown.ToString() + Globals.timeLeftText;
-            timerDisplayCountDown.Start();
-            timerWindowApp.Start();
-        }
+        //////////////////////////
+        ///SETTINGS FOR SCREEN///
+        ////////////////////////
         private void fullScreenMode()
         {
             leaveFullScreenImage.Visible = true;
@@ -127,10 +134,6 @@ namespace WindowsFormsApplication2
             this.FormBorderStyle = FormBorderStyle.Sizable;
             this.WindowState = FormWindowState.Normal;
         }
-        private void flowLayoutPanelMain_Resize(object sender, EventArgs e)
-        {
-            flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
-        }
         private void leaveFullScreen_Click(object sender, EventArgs e)
         {
             leavefullScreenMode();          
@@ -139,43 +142,66 @@ namespace WindowsFormsApplication2
         {
             return Screen.FromControl(this).Bounds;
         }
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
+                //cp.Style &= ~0x02000000; // Turn off WS_CLIPCHILDREN
+                return cp;
+            }
+        }
+        ///////////////////////
+        ///CONTROL LISTENERS///
+        //////////////////////
+        private void btnStartCycle_Click(object sender, EventArgs e)
+        {
+            startTimerCycle(Process.getState());
+        }
+        private void flowLayoutPanelMain_Resize(object sender, EventArgs e)
+        {
+            flowLayoutPanelMain.Left = (this.ClientSize.Width - flowLayoutPanelMain.Size.Width) / 2;
+        }
         private void radioBtnModeIntense_CheckedChanged(object sender, EventArgs e)
         {
             UserMode.cyclePause = ModeList.hardMode.getCycles()[0];
             UserMode.cycleWork = ModeList.hardMode.getCycles()[1];
         }
-        private void radioBtnModelRelax_CheckedChanged(object sender, EventArgs e)
+        private void radioBtnModeLight_CheckedChanged(object sender, EventArgs e)
         {
             UserMode.cyclePause = ModeList.lightMode.getCycles()[0];
             UserMode.cycleWork = ModeList.lightMode.getCycles()[1];
         }
-        private void radioBtnModeICustom_CheckedChanged(object sender, EventArgs e)
+        private void radioBtnModeCustom_CheckedChanged(object sender, EventArgs e)
         {
-
-            if (!radioBtnModeICustom.Checked)
-            {
-                numericUpDownWork.ReadOnly = true;
-                numericUpDownWork.Increment = 0;
-                numericUpDownPause.ReadOnly = true;
-                numericUpDownPause.Increment = 0;
-                
-
-            }
-            else
-            {
-                numericUpDownWork.ReadOnly = false;
-                numericUpDownWork.Increment = 1;
-                numericUpDownPause.ReadOnly = false;
-                numericUpDownPause.Increment = 1;
-
-            }
+            setLockNumericUpDown(radioBtnModeICustom.Checked);
         }
-
-        private void setIconsApp()
+        private void setLockNumericUpDown(bool btnChecked) {
+            numericUpDownWork.ReadOnly = !btnChecked;
+            numericUpDownPause.ReadOnly = !btnChecked;
+            numericUpDownWork.Increment = btnChecked ? 1 :  0;
+            numericUpDownPause.Increment = btnChecked ? 1 : 0;
+        }
+        private void numericUpDownWork_ValueChanged(object sender, EventArgs e)
         {
-            if (Process.getState() == State.Work) this.Icon = defaultIcon;
-            else this.Icon = workIcon;          
+            int customWork = (int)numericUpDownWork.Value;
+            eyesightapp.Properties.Settings.Default.customWork = customWork;
+            eyesightapp.Properties.Settings.Default.Save();
+            ModeList.userMode.setCycleWork(eyesightapp.Properties.Settings.Default.customWork);
+            UserMode.cycleWork = ModeList.userMode.getCycles()[1];
         }
+        private void numericUpDownPause_ValueChanged(object sender, EventArgs e)
+        {
+            int customPause = (int)numericUpDownPause.Value;
+            eyesightapp.Properties.Settings.Default.customPause = customPause;
+            eyesightapp.Properties.Settings.Default.Save();
+            ModeList.userMode.setCyclePause(eyesightapp.Properties.Settings.Default.customPause);
+            UserMode.cyclePause = ModeList.userMode.getCycles()[0];
+        }
+        ///////////////////////////
+        /// FUNCTIONS FOR DEBUG///
+        //////////////////////////
         private void debugMode(bool debugMode)
         {
             if (debugMode)
@@ -200,33 +226,6 @@ namespace WindowsFormsApplication2
             {
                 Debug.WriteLine(item.ToString());
             }
-        }
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                CreateParams cp = base.CreateParams;
-                cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
-                //cp.Style &= ~0x02000000; // Turn off WS_CLIPCHILDREN
-                return cp;
-            }
-        }
-        private void numericUpDownWork_ValueChanged(object sender, EventArgs e)
-        {
-            int customWork = (int) numericUpDownWork.Value;
-            eyesightapp.Properties.Settings.Default.customWork = customWork;
-            eyesightapp.Properties.Settings.Default.Save();
-            ModeList.userMode.setCycleWork(eyesightapp.Properties.Settings.Default.customWork);
-            UserMode.cycleWork = ModeList.userMode.getCycles()[1];
-        }
-
-        private void numericUpDownPause_ValueChanged(object sender, EventArgs e)
-        {
-            int customPause = (int)numericUpDownPause.Value;
-            eyesightapp.Properties.Settings.Default.customPause = customPause;
-            eyesightapp.Properties.Settings.Default.Save();
-            ModeList.userMode.setCyclePause(eyesightapp.Properties.Settings.Default.customPause);
-            UserMode.cyclePause = ModeList.userMode.getCycles()[0];
         }
     }
     static class Process
@@ -269,8 +268,7 @@ namespace WindowsFormsApplication2
         public void setCyclePause(int pause)
         {
             this.cyclePause = pause;
-        }
-        
+        }    
         public int[] getCycles()
         {
             return new[] { this.cyclePause, this.cycleWork };

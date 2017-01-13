@@ -80,7 +80,7 @@
             this.currentDateLabel.Location = new System.Drawing.Point(3, 10);
             this.currentDateLabel.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
             this.currentDateLabel.Name = "currentDateLabel";
-            this.currentDateLabel.Size = new System.Drawing.Size(234, 19);
+            this.currentDateLabel.Size = new System.Drawing.Size(240, 19);
             this.currentDateLabel.TabIndex = 5;
             this.currentDateLabel.Text = "dateLabel";
             this.currentDateLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -106,7 +106,7 @@
             this.groupBoxMode.Controls.Add(this.radioBtnModeIntense);
             this.groupBoxMode.Controls.Add(this.radioBtnModeICustom);
             this.groupBoxMode.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxMode.Location = new System.Drawing.Point(25, 46);
+            this.groupBoxMode.Location = new System.Drawing.Point(28, 46);
             this.groupBoxMode.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
             this.groupBoxMode.Name = "groupBoxMode";
             this.groupBoxMode.Size = new System.Drawing.Size(189, 168);
@@ -173,7 +173,7 @@
             this.radioBtnModelRelax.TabIndex = 7;
             this.radioBtnModelRelax.Text = "Relaxation";
             this.radioBtnModelRelax.UseVisualStyleBackColor = true;
-            this.radioBtnModelRelax.CheckedChanged += new System.EventHandler(this.radioBtnModelRelax_CheckedChanged);
+            this.radioBtnModelRelax.CheckedChanged += new System.EventHandler(this.radioBtnModeLight_CheckedChanged);
             // 
             // radioBtnModeICustom
             // 
@@ -187,7 +187,7 @@
             this.radioBtnModeICustom.TabStop = true;
             this.radioBtnModeICustom.Text = "Custom choice";
             this.radioBtnModeICustom.UseVisualStyleBackColor = false;
-            this.radioBtnModeICustom.CheckedChanged += new System.EventHandler(this.radioBtnModeICustom_CheckedChanged);
+            this.radioBtnModeICustom.CheckedChanged += new System.EventHandler(this.radioBtnModeCustom_CheckedChanged);
             // 
             // flowLayoutPanelControl
             // 
@@ -228,7 +228,7 @@
             this.btnTimerWorkCycle.Location = new System.Drawing.Point(0, 227);
             this.btnTimerWorkCycle.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.btnTimerWorkCycle.Name = "btnTimerWorkCycle";
-            this.btnTimerWorkCycle.Size = new System.Drawing.Size(240, 30);
+            this.btnTimerWorkCycle.Size = new System.Drawing.Size(246, 30);
             this.btnTimerWorkCycle.TabIndex = 1;
             this.btnTimerWorkCycle.UseVisualStyleBackColor = false;
             this.btnTimerWorkCycle.Click += new System.EventHandler(this.btnStartCycle_Click);
@@ -238,7 +238,7 @@
             this.countDownWorkLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.countDownWorkLabel.AutoSize = true;
             this.countDownWorkLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.countDownWorkLabel.Location = new System.Drawing.Point(52, 267);
+            this.countDownWorkLabel.Location = new System.Drawing.Point(55, 267);
             this.countDownWorkLabel.Margin = new System.Windows.Forms.Padding(3, 10, 3, 0);
             this.countDownWorkLabel.Name = "countDownWorkLabel";
             this.countDownWorkLabel.Size = new System.Drawing.Size(135, 19);
@@ -279,10 +279,10 @@
             // 
             this.leaveFullScreenImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.leaveFullScreenImage.BackColor = System.Drawing.Color.Transparent;
-            this.leaveFullScreenImage.BackgroundImage = global::eyesightapp.Properties.Resources.leave_full_screen_mode;
+            this.leaveFullScreenImage.BackgroundImage = global::eyesightapp.Properties.Resources.icon_close;
             this.leaveFullScreenImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.leaveFullScreenImage.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.leaveFullScreenImage.Location = new System.Drawing.Point(649, 0);
+            this.leaveFullScreenImage.Location = new System.Drawing.Point(666, 0);
             this.leaveFullScreenImage.Margin = new System.Windows.Forms.Padding(0);
             this.leaveFullScreenImage.Name = "leaveFullScreenImage";
             this.leaveFullScreenImage.Size = new System.Drawing.Size(20, 20);
@@ -299,7 +299,7 @@
             this.controlFullViewPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.controlFullViewPanel.Location = new System.Drawing.Point(0, 0);
             this.controlFullViewPanel.Name = "controlFullViewPanel";
-            this.controlFullViewPanel.Size = new System.Drawing.Size(669, 20);
+            this.controlFullViewPanel.Size = new System.Drawing.Size(686, 20);
             this.controlFullViewPanel.TabIndex = 13;
             // 
             // FormWindow
@@ -311,7 +311,7 @@
             this.BackColor = System.Drawing.SystemColors.Window;
             this.BackgroundImage = global::eyesightapp.Properties.Resources.city_night_sea;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(686, 331);
+            this.ClientSize = new System.Drawing.Size(703, 331);
             this.Controls.Add(this.controlFullViewPanel);
             this.Controls.Add(this.flowLayoutPanelMain);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -321,7 +321,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "EyeSight";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.groupBoxMode.ResumeLayout(false);
             this.groupBoxMode.PerformLayout();
             this.panel1.ResumeLayout(false);
